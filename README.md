@@ -1,4 +1,4 @@
-# Local AI Orchestrator
+# Local AI Orchestrator (Conductor)
 
 **Your Central Hub for Local AI Intelligence.**
 
