@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local AI Orchestrator</title>
+    <link rel="stylesheet" href="style.css?v=2">
+    <!-- Google Fonts for premium look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                <span>Orchestrator</span>
+            </div>
+            <nav>
+                <button class="nav-item active" data-tab="dashboard">
+                    Dashboard
+                </button>
+                <button class="nav-item" data-tab="routes">
+                    Routes
+                </button>
+                <button class="nav-item" data-tab="providers">
+                    Providers
+                </button>
+                <button class="nav-item" data-tab="logs">
+                    Logs
+                </button>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header>
+                <h1 id="page-title">Dashboard</h1>
+                <div class="status-indicator">
+                    <span class="dot"></span>
+                    <span id="system-status">System Active</span>
+                </div>
+            </header>
+
+            <div id="tab-dashboard" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="card stat-card">
+                        <h3>Active Model</h3>
+                        <p id="stat-active-model" class="highlight">None</p>
+                    </div>
+                    <div class="card stat-card">
+                        <h3>Active Provider</h3>
+                        <p id="stat-active-provider" class="highlight">None</p>
+                    </div>
+                    <div class="card stat-card">
+                        <h3>Providers Online</h3>
+                        <p id="stat-providers-count">0</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Quick Actions</h2>
+                    <div class="actions">
+                        <button class="btn secondary" onclick="refreshRegistry()">Refresh Registry</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-routes" class="tab-content">
+                <div class="card">
+                    <h2>Route Configuration</h2>
+                    <p class="description">Map stable route aliases to models and define fallback rules.</p>
+                    <div id="routes-container"></div>
+                    <button class="btn primary" onclick="saveRoutes()">Save Changes</button>
+                </div>
+            </div>
+
+            <div id="tab-providers" class="tab-content">
+                <div class="card">
+                    <h2>Provider Status</h2>
+                    <div id="providers-list" class="list-container"></div>
+                </div>
+            </div>
+
+            <div id="tab-logs" class="tab-content">
+                <div class="card">
+                    <h2>Recent Activity</h2>
+                    <div class="log-viewer">
+                        <p>Log viewing coming soon...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js?v=2"></script>
+</body>
+
+</html>

@@ -1,0 +1,31 @@
+server:
+  host: "127.0.0.1"
+  port: 8000
+
+runtime:
+  auto_refresh_on_miss: true
+  refresh_cooldown_seconds: 30
+  request_timeout_seconds: 600
+
+routing:
+  enable_fallback: true
+  default_route_if_model_missing: null
+  max_fallback_attempts: 2
+
+scheduling:
+  mode: "global_serial"
+  pick_next_strategy: "score_then_age"
+  aging_bonus_per_second: 0.01
+  default_model_score:
+    base_priority: 0
+    load_penalty: 0
+    runtime_penalty: 0
+    always_run_last: false
+
+logging:
+  keep_last_n_requests_in_memory: 500
+  log_dir: "logs"
+  keep_days: 14
+
+providers:
+  config_dir: "providers"

@@ -1,0 +1,29 @@
+provider_id: "ollama_local"
+provider_type: "ollama"
+resource_group: "local_gpu"
+api:
+  base_url: "http://127.0.0.1:11434"
+  health:
+    method: "GET"
+    path: "/api/tags"
+    success_codes: [200]
+    timeout_seconds: 2
+  models:
+    method: "GET"
+    path: "/api/tags"
+detect:
+  method: "path_or_probe"
+  binary_name: "ollama"
+  probe_url: "http://127.0.0.1:11434/api/tags"
+start:
+  enabled: true
+  command: "ollama"
+  args: ["serve"]
+  startup_grace_seconds: 20
+stop:
+  method: "terminate_process"
+policy:
+  keep_warm: false
+  idle_shutdown_seconds: 60
+  max_start_attempts: 2
+  restart_on_failure: false

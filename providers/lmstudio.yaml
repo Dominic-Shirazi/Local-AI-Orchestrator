@@ -1,0 +1,26 @@
+provider_id: "lmstudio_local"
+provider_type: "openai_compat"
+resource_group: "local_gpu"
+api:
+  base_url: "http://127.0.0.1:1234"
+  health:
+    method: "GET"
+    path: "/v1/models"
+    success_codes: [200]
+    timeout_seconds: 2
+  models:
+    method: "GET"
+    path: "/v1/models"
+detect:
+  method: "path_or_probe"
+  binary_name: "lms"
+  probe_url: "http://127.0.0.1:1234/v1/models"
+start:
+  enabled: false
+  command: "lms"
+  args: ["local-server","start"]
+  startup_grace_seconds: 10
+stop:
+  method: "terminate_process"
+policy:
+  keep_warm: true

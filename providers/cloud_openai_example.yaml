@@ -1,0 +1,22 @@
+provider_id: "openai_cloud"
+provider_type: "openai_compat"
+resource_group: "cloud"
+api:
+  base_url: "https://api.openai.com"
+  health:
+    method: "GET"
+    path: "/v1/models"
+    success_codes: [200]
+    timeout_seconds: 5
+  models:
+    method: "GET"
+    path: "/v1/models"
+    declared_models: ["gpt-4-turbo-preview","gpt-3.5-turbo"]
+detect:
+  method: "none"
+start:
+  enabled: false
+stop:
+  method: "none"
+policy:
+  keep_warm: true

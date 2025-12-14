@@ -1,0 +1,32 @@
+provider_id: "chatterbox_tts"
+provider_type: "openai_compat"
+resource_group: "local_gpu"
+api:
+  base_url: "http://127.0.0.1:5000"
+  health:
+    method: "GET"
+    path: "/health"
+    success_codes: [200]
+    timeout_seconds: 2
+  models:
+    method: "GET"
+    path: "/v1/models"
+    declared_models: ["chatterbox-tts"]
+detect:
+  method: "none"
+start:
+  enabled: true
+  command: "python"
+  args: ["server.py"]
+  cwd: "C:\\Users\\persi\\Documents\\chatterbox-tts-server"
+  env:
+    VIRTUAL_ENV: "C:\\Users\\persi\\Documents\\chatterbox-tts-server\\venv"
+    PATH: "C:\\Users\\persi\\Documents\\chatterbox-tts-server\\venv\\Scripts;%PATH%"
+  startup_grace_seconds: 10
+stop:
+  method: "terminate_process"
+policy:
+  keep_warm: false
+  idle_shutdown_seconds: 30
+  max_start_attempts: 2
+  restart_on_failure: false

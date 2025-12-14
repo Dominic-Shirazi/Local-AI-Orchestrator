@@ -1,0 +1,6 @@
+models:
+  "gemma3:12b_it_qat":
+    base_priority: 2
+    load_penalty: 6
+    runtime_penalty: 4
+    always_run_last: false

@@ -1,0 +1,5 @@
+routes:
+  local_default:
+    primary_model: "gemma3:12b_it_qat"
+    fallback_models: []
+    fallback_on: ["unreachable","timeout","oom","context_length"]
