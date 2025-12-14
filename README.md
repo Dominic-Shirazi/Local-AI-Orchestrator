@@ -2,6 +2,8 @@
 
 **Your Central Hub for Local AI Intelligence.**
 
+![Screenshot of ConductorAPI](logs/Screenshot%202025-12-13%20182900.png)
+
 The **ConductorAPI** is a powerful organization layer for your local AI API traffic. Think of it as the air traffic controller for your local AI runtimes (Ollama, LM Studio, llama.cpp, and more). It provides a **single, unified OpenAI-compatible endpoint** that intelligently routes your requests to the right model, spinning runtimes and models up and down automatically to ensure you never run out of VRAM.
 
 **Why you want this:**
