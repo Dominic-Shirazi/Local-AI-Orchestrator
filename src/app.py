@@ -9,7 +9,7 @@ import yaml
 from .types import ChatCompletionRequest, ChatCompletionResponse, Job
 from .config import global_config
 from .registry import global_registry
-from .scheduler import global_scheduler
+from .queuing.scheduler import global_scheduler
 from .routing import global_router
 from .logging_json import logger_instance
 from .errors import GatewayError

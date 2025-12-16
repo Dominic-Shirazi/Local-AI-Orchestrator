@@ -4,14 +4,16 @@
 
 ![Screenshot of ConductorAPI](logs/Screenshot%202025-12-13%20182900.png)
 
-The **ConductorAPI** is a powerful organization layer for your local AI API traffic. Think of it as the air traffic controller for your local AI runtimes (Ollama, LM Studio, llama.cpp, and more). It provides a **single, unified OpenAI-compatible endpoint** that intelligently routes your requests to the right model, spinning runtimes and models up and down automatically to ensure you never run out of VRAM.
+The **ConductorAPI** is a powerful organization layer for your local AI API traffic. Think of it as the air traffic controller for your local AI runtimes (Ollama, LM Studio, llama.cpp, and more). It provides a **single, unified OpenAI-compatible endpoint** that intelligently routes your requests to the right model, spinning runtimes and models up and down automatically.
 
-**Why you want this:**
-- **Run Multiple Automation Tasks**: Execute coding agents, chat bots, and summarizers simultaneously without conflict. The orchestrator queues them and switches models instantly.
-- **Intelligent Resource Management**: Only one VRAM-heavy model runs at a time. The system automatically unloads idle models and loads the next one required.
-- **Unified Front Door**: Point all your apps to `http://127.0.0.1:8000`. No more juggling port numbers (11434, 1234, 8080...).
-- **Route Aliases**: Use stable names like `route:coding` or `route:chat`. If your primary model is down or overloaded, the system can automatically fall back to another model (local or cloud).
-- **Plug-and-Play Extensibility**: Add any OpenAI-compatible provider (Groq, weak-to-strong-generalization rigs, custom RAG APIs) just by dropping a YAML file in the `providers/` folder.
+## Key Features
+
+- **Advanced Concurrency Control**: Define "Levers" for your models.
+    - **Exclusive Mode**: DeepSeek-67B runs? Everything else pauses.
+    - **Resource Budgeting**: Assign CPU/GPU costs (e.g., "This model takes 30%"). Run multiple lightweight models simultaneously until the budget is full.
+- **Unified Front Door**: Point all your apps to `http://127.0.0.1:8000`.
+- **Intelligent Resource Management**: The system automatically unloads idle models to free up VRAM.
+- **Route Aliases**: Use stable names like `route:coding` or `route:chat`.
 
 ## Setup
 
@@ -31,67 +33,46 @@ The **ConductorAPI** is a powerful organization layer for your local AI API traf
 ```bash
 python conductorAPI.py
 ```
-Run `python conductorAPI.py` to start the server on `http://127.0.0.1:8000`.
-The ConductorAPI includes a simple web-based user interface to monitor and manage your AI models and routes. To access the UI:
+Open your browser and navigate to `http://127.0.0.1:8000` to view the **Dashboard**.
 
-From the UI, you can:
-- View active routes and their statuses.
-- Monitor running models and their resource usage.
-- Configure settings dynamically without restarting the server.
+## Configuration Logic
 
+The system is controlled by three main YAML files in the root directory. They are heavily commented to help you get started.
 
+### 1. `routes.yaml` (The "Phonebook")
+Define aliases for your models.
+```yaml
+routes:
+  daily_driver:
+    primary_model: "gemma3:12b_it_qat"
+    fallback_models: ["llama3"]
+```
 
+### 2. `models.yaml` (The "Rules")
+Define how your models behave and importantly, their **Resource Usage**.
+```yaml
+models:
+  "deepseek-coder:67b":
+    base_priority: 10
+    resources:
+      exclusive: true   # Runs alone.
+      vram_usage: 100.0
 
+  "gemma3:12b":
+    resources:
+      cpu_usage: 20.0   # Runs nicely with others up to 100% total.
+```
 
-## Viewing the User Interface
+### 3. `config.yaml` (The "Brain")
+Global settings for timeouts, logging, and default scheduling strategies.
 
-The ConductorAPI includes a simple web-based user interface to monitor and manage your AI models and routes. To access the UI:
-
-1. Start the server by running:
-   ```bash
-   python conductorAPI.py
-   ```
-2. Open your browser and navigate to `http://127.0.0.1:8000`.
-
-From the UI, you can:
-- View active routes and their statuses.
-- Monitor running models and their resource usage.
-- Configure settings dynamically without restarting the server.
-
-## Non-UI-Configuration
-
-- `config.yaml`: Main settings (port, logging, etc).
-- `routes.yaml`: Define route aliases (e.g., `route:planner` -> `gemini-2.0-flash`).
-- `models.yaml`: Override detailed scoring/priority for specific models.
-- `providers/*.yaml`: Define your backend providers.
-
-
-## Providers/runtimes & Extensibility to any API endopint
+## Providers & Extensibility
 
 **"Just a YAML file away."**
 
-The system is designed to be fully extensible. Each "provider" is defined by a config file in the `providers/` directory. You can share these files like extensions.
+Add any OpenAI-compatible provider (Groq, custom RAG APIs, etc) by dropping a YAML file in the `providers/` folder.
 
 ### Built-in Support:
 - **Ollama**: Auto-starts `ollama serve`.
 - **llama.cpp**: Auto-starts internal server.
-- **LM Studio**: Can auto-start via `lms` CLI (see `providers/lmstudio.yaml`).
-
-### Adding a Custom Provider (e.g., Hugging Face Transformers, KoboldCpp, any resource intensive API):
-Create a file `providers/my_custom_api.yaml`:
-
-```yaml
-provider_id: "my_rag_api"
-provider_type: "openai_compat"
-api:
-  base_url: "http://localhost:9090"
-  health:
-    method: "GET"
-    path: "/health"
-    success_codes: [200]
-start:
-  enabled: true
-  command: "python"
-  args: ["run_my_rag.py"]
-```
-The Orchestrator will now manage this process and can route requests to it! Set it up like you would an OpenAI endpoint
+- **LM Studio**: Can auto-start via `lms` CLI.

@@ -1,5 +1,28 @@
+# ==============================================================================
+# ROUTES CONFIGURATION (routes.yaml)
+# ==============================================================================
+# Routes act as "Aliases" or "Virtual Models".
+# Instead of your app asking for "gemini-2.0-flash", it asks for "route:coding".
+#
+# WHY?
+# 1. Stability: You can swap the underlying model (gemini -> gpt4) without changing your app code.
+# 2. Fallbacks: If the first model fails, the Orchestrator automatically tries the next one.
+#
+# SYNTAX:
+# name_of_route:
+#   primary_model: "model_id_here"
+#   fallback_models: ["backup_model_1", "backup_model_2"]
+# ------------------------------------------------------------------------------
+
 routes:
+  # USAGE: Set your AI client to use model "route:local_default"
   local_default:
-    primary_model: "gemma3:12b_it_qat"
-    fallback_models: []
-    fallback_on: ["unreachable","timeout","oom","context_length"]
+    primary_model: "gemma3:12b_it_qat"  # First choice
+    fallback_models: []                 # No back ups defined
+    fallback_on: ["unreachable", "timeout", "oom"] # When to retry?
+
+  # Example: A generic "coding" route
+  coding:
+    primary_model: "deepseek-coder:67b"
+    fallback_models: 
+      - "gemma3:12b_it_qat" # Logic: Try the big gun, if it fails, try the fast local one.

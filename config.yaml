@@ -1,31 +1,30 @@
+# ==============================================================================
+# MAIN CONFIGURATION (config.yaml)
+# ==============================================================================
+# Global settings for the Orchestrator.
+# ------------------------------------------------------------------------------
+
 server:
   host: "127.0.0.1"
-  port: 8000
+  port: 8000 # The port the API listens on
 
 runtime:
-  auto_refresh_on_miss: true
-  refresh_cooldown_seconds: 30
-  request_timeout_seconds: 600
+  auto_refresh_on_miss: true    # If a model isn't found, try to refresh providers (like scanning Ollama again)
+  refresh_cooldown_seconds: 30  # Don't spam refresh more than once every 30s
+  request_timeout_seconds: 600  # 10 Minutes max per request
 
 routing:
-  enable_fallback: true
-  default_route_if_model_missing: null
-  max_fallback_attempts: 2
+  enable_fallback: true         # Allow retry logic defined in routes.yaml
+  max_fallback_attempts: 2      # Don't retry more than twice
 
 scheduling:
-  mode: "global_serial"
+  # "score_then_age": Pick highest priority, then oldest job.
   pick_next_strategy: "score_then_age"
-  aging_bonus_per_second: 0.01
-  default_model_score:
-    base_priority: 0
-    load_penalty: 0
-    runtime_penalty: 0
-    always_run_last: false
+  aging_bonus_per_second: 0.01  # Jobs gain 0.01 priority points every second they wait.
 
 logging:
-  keep_last_n_requests_in_memory: 500
   log_dir: "logs"
-  keep_days: 14
+  keep_days: 14                 # Auto-delete logs older than 2 weeks
 
 providers:
-  config_dir: "providers"
+  config_dir: "providers"       # Where to look for provider .yaml files

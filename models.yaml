@@ -1,6 +1,47 @@
+# ==============================================================================
+# MODELS CONFIGURATION (models.yaml)
+# ==============================================================================
+# This file lets you adhere specific rules to specific models.
+#
+# YAML BASICS:
+# - Everything after a '#' is a comment (ignored by the computer).
+# - Indentation matters! Use spaces (2 or 4), not tabs.
+# - Lists are created with '-', but here we mostly use "Keys" (like "gemma3:12b").
+#
+# HOW CONCURRENCY WORKS (The "Levers"):
+# We use a system of "Points" or "Usage %" to decide if two things can run together.
+# - cpu_usage: How much CPU does this take? (0-100)
+# - gpu_usage: How much GPU? (0-100)
+# - exclusive: If "true", this model is a DIVA. It runs alone. No one else allowed.
+#
+# SCORING (Who goes first?):
+# - base_priority: Higher number = Higher importance. (e.g., 10 beats 1).
+# - load_penalty: Deduct points if the system is busy (Advanced).
+#
+# ------------------------------------------------------------------------------
+
 models:
+  # Example 1: A lightweight model that plays nice with others.
+  # "gemma3:12b_it_qat" is the exact ID used by Ollama/LM Studio.
   "gemma3:12b_it_qat":
-    base_priority: 2
-    load_penalty: 6
-    runtime_penalty: 4
-    always_run_last: false
+    base_priority: 2        # Standard priority
+    resources:
+      cpu_usage: 20.0       # Takes ~20% of our abstract CPU budget
+      gpu_usage: 10.0       # Takes ~10% of our GPU budget
+                            # Conclusion: You could run ~5 of these at once before hitting 100%.
+
+  # Example 2: A Heavy Coding Model
+  "deepseek-coder:67b":
+    base_priority: 10       # High Priority! Cut in line if possible.
+    resources:
+      exclusive: true       # THE "LEVER": Runs entirely alone. 
+                            # If this starts, everyone else waits.
+                            # If others are running, this waits for them to finish.
+
+  # Example 3: A standard model (defaults)
+  "llama3":
+    base_priority: 5
+    resources:
+      cpu_usage: 50.0       # Takes half the computer.
+      gpu_usage: 50.0       # Takes half the GPU.
+      # You can run 2 of these, or 1 of these + 2 Gemmas.

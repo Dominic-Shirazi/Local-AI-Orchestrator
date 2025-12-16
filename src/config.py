@@ -17,11 +17,18 @@ class RoutingConfig(BaseModel):
     default_route_if_model_missing: Optional[str] = None
     max_fallback_attempts: int = 2
 
+class ModelResourceConfig(BaseModel):
+    cpu_usage: float = 0.0 # 0-100
+    gpu_usage: float = 0.0 # 0-100
+    vram_usage: float = 0.0 # 0-100 (Abstract units or percent)
+    exclusive: bool = False # If true, runs alone
+
 class ModelScoreConfig(BaseModel):
     base_priority: int = 0
     load_penalty: int = 0
     runtime_penalty: int = 0
     always_run_last: bool = False
+    resources: ModelResourceConfig = Field(default_factory=ModelResourceConfig)
 
 class SchedulingConfig(BaseModel):
     mode: str = "global_serial"
